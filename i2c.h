@@ -17,7 +17,7 @@ class I2cBus {
     int file_;
     int list_[5];
 
-    
+
 
   public:
   /* --------------------------- General Methods --------------------------- */
@@ -32,18 +32,18 @@ class I2cBus {
   following methods are convenience functions to communicate with such
   devices.*/
 
-    int ReadFromMem(int addr, int mem_addr, int n_bytes);
+    int ReadFromMem(uint8_t addr, uint8_t mem_addr, int n_bytes);
   /* Read nbytes from the slave specified by addr starting from the memory
   address specified by memaddr. The argument addrsize specifies the address
   size in bits. Returns a bytes object with the data read.*/
 
-    void ReadFromMemInto(int addr, int memaddr, int* buff);
+    void ReadFromMemInto(uint8_t addr, uint8_t memaddr, int* buff);
   /* Read into buf from the slave specified by addr starting from the memory
   address specified by memaddr. The number of bytes read is the length of buf.
   The argument addrsize specifies the address size in bits (on ESP8266 this
   argument is not recognised and the address size is always 8 bits).*/
 
-    void WriteToMem(int addr, int memaddr, int* buff);
+    void WriteToMem(uint8_t addr, uint8_t memaddr, int* buff);
   /* Write buf to the slave specified by addr starting from the memory address
   specified by memaddr. The argument addrsize specifies the address size in
   bits (on ESP8266 this argument is not recognised and the address size is
