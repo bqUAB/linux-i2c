@@ -1,10 +1,10 @@
 #include "i2c.h"
-#include <iostream>
 #include <stdio.h>
+
 
 int main() {
   I2cBus i2c_0(0);
-  i2c_0.Scan();
-  printf("Available address: 0x%X\n", i2c_0.avail_addr);
+  uint8_t value = i2c_0.ReadFromMem(0x53, 0x00);
+  printf("The value read is: 0x%X\n", value);
   return 0;
 }
