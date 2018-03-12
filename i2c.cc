@@ -15,7 +15,7 @@ I2cBus::I2cBus(int bus_n){
   }
 }
 
-void I2cBus::Slave_Ctrl_(uint8_t addr){
+void I2cBus::SetSlaveAddr_(uint8_t addr){
   /* Input output control setup to the slave device.*/
 
     if (ioctl(file_, I2C_SLAVE, addr) < 0) {
@@ -29,7 +29,7 @@ void I2cBus::WriteToMem(uint8_t addr, uint8_t mem_addr, uint8_t data){
   /* Write data to the slave specified by addr starting from the memory address
   specified by mem_addr.*/
 
-  Slave_Ctrl_(addr);
+  SetSlaveAddr_(addr);
 
   //uint8_t bSuccess = 0;
   uint8_t w_buf[2];
@@ -49,7 +49,7 @@ uint8_t I2cBus::ReadFromMem(uint8_t addr, uint8_t mem_addr){
   /* Read a byte from the slave specified by addr starting from the memory
   address specified by mem_addr.*/
 
-  Slave_Ctrl_(addr);
+  SetSlaveAddr_(addr);
 
   //uint8_t bSuccess = 0;
   uint8_t data; // 'data' will store the register data

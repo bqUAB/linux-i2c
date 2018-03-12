@@ -17,7 +17,7 @@ class I2cBus {
     int file_ = 0;
     int list_[5];
 
-    void Slave_Ctrl_(uint8_t addr);
+    void SetSlaveAddr_(uint8_t addr);
 
   public:
     I2cBus(int bus_n);
