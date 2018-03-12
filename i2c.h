@@ -14,14 +14,16 @@ http://docs.micropython.org/en/latest/wipy/library/machine.I2C.html
 
 class I2cBus {
   private:
-    int file_;
+    int file_ = 0;
     int list_[5];
 
-
-
   public:
+    uint8_t avail_addr;
+
+  I2cBus(int bus_n);
+
   /* --------------------------- General Methods --------------------------- */
-    int Scan();
+    void Scan();
   /*Scan all I2C addresses between 0x08 and 0x77 inclusive and return a list
   of those that respond. A device responds if it pulls the SDA line low after
   its address (including a write bit) is sent on the bus.*/
