@@ -1,6 +1,6 @@
 ###############################################################################
 # C++ Makefile for ARM Linux
-# Tested on SoC EDS 16.1 on Windows 10 64-Bit
+# Tested on SoC EDS 17.1 on Windows 10 64-Bit
 #
 # Copyright (C) 2015 by Joel Bodenmann <joel@embedded.pro>
 # https://blog.embedded.pro/de1-soc-a-better-makefile/
@@ -22,7 +22,7 @@ INCS    = ../include
 LIBS    = -lm
 
 # Parameters for SCP upload. Set up SSH keys to bypass password prompt
-SCP_TARGET_IP   = 192.168.0.11
+SCP_TARGET_IP   = 192.168.1.54
 SCP_USER        = root
 SCP_TARGET_PATH = /home/root/bin
 SCP             = scp
