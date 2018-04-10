@@ -10,7 +10,7 @@ http://docs.micropython.org/en/latest/wipy/library/machine.I2C.html
 #include <unistd.h>  // Needed for write, close
 #include <stdlib.h>  // Needed for exit()
 #include <sys/ioctl.h>  // Needed for ioctl
-// #include <linux/i2c-dev.h>  // Needed to use the I2C Linux driver (I2C_SLAVE)
+#include <linux/i2c-dev.h>  // Needed to use the I2C Linux driver (I2C_SLAVE)
 
 class I2cBus {
   private:
@@ -22,16 +22,17 @@ class I2cBus {
   public:
     I2cBus(int bus_n);
 
-    /* -------------------------- Memory Operations --------------------------
-    Some I2C devices act as a memory device (or set of registers) that can be
-    read from and written to. In this case there are two addresses associated
-    with an I2C transaction: the slave address and the memory address. The
-    following methods are convenience functions to communicate with such
-    devices.*/
+    // -------------------------- Memory Operations --------------------------
+    // Some I2C devices act as a memory device (or set of registers) that can
+    // be read from and written to. In this case there are two addresses
+    // associated with an I2C transaction: the slave address and the memory
+    // address. The following methods are convenience functions to communicate
+    // with such devices.
 
-    void WriteToMem(uint8_t addr, uint8_t mem_addr, uint8_t data);
+    void WriteToMem(uint8_t addr, uint8_t mem_addr,  uint8_t n_bytes,
+                    uint8_t* data_buff);
     uint8_t ReadFromMem(uint8_t addr, uint8_t mem_addr);
-    void ReadFromMemInto(uint8_t addr, uint8_t mem_addr, int n_bytes,
+    void ReadFromMemInto(uint8_t addr, uint8_t mem_addr, uint8_t n_bytes,
                          uint8_t* data_buff);
 
 };
