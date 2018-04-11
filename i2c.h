@@ -5,19 +5,19 @@ http://docs.micropython.org/en/latest/wipy/library/machine.I2C.html
 #define I2C_H_
 
 #include <stdio.h>  // Needed for printf, snprintf, perror
-#include <cstdint>  // Needed for unit uint8_t data type
 #include <fcntl.h>  // Needed for open()
 #include <unistd.h>  // Needed for write, close
 #include <stdlib.h>  // Needed for exit()
 #include <sys/ioctl.h>  // Needed for ioctl
 #include <linux/i2c-dev.h>  // Needed to use the I2C Linux driver (I2C_SLAVE)
 
+
 class I2cBus {
   private:
     int file_ = 0;
     int list_[5];
 
-    void SetSlaveAddr_(uint8_t addr);
+    void SetSlaveAddr_(int addr);
 
   public:
     I2cBus(int bus_n);
@@ -29,11 +29,9 @@ class I2cBus {
     // address. The following methods are convenience functions to communicate
     // with such devices.
 
-    void WriteToMem(uint8_t addr, uint8_t mem_addr,  uint8_t n_bytes,
-                    uint8_t* data_buff);
-    uint8_t ReadFromMem(uint8_t addr, uint8_t mem_addr);
-    void ReadFromMemInto(uint8_t addr, uint8_t mem_addr, uint8_t n_bytes,
-                         uint8_t* data_buff);
+    void WriteToMem(int addr, int mem_addr,  int n_bytes, int* data_buff);
+    int ReadFromMem(int addr, int mem_addr);
+    void ReadFromMemInto(int addr, int mem_addr, int n_bytes, int* data_buff);
 
 };
 

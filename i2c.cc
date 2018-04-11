@@ -1,5 +1,6 @@
 #include "i2c.h"
 
+
 // I2C bus constructor
 I2cBus::I2cBus(int bus_n) {
   // Access an I2C bus adapter from a C++ program
@@ -15,7 +16,7 @@ I2cBus::I2cBus(int bus_n) {
   }
 }
 
-void I2cBus::SetSlaveAddr_(uint8_t addr) {
+void I2cBus::SetSlaveAddr_(int addr) {
   // Input output control setup to the slave device.
   if (ioctl(file_, I2C_SLAVE, addr) < 0) {
         printf("Failed to acquire bus access and/or talk to slave.\n");
@@ -24,18 +25,19 @@ void I2cBus::SetSlaveAddr_(uint8_t addr) {
   }
 }
 
-void I2cBus::WriteToMem(uint8_t addr, uint8_t mem_addr, uint8_t n_bytes,
-                        uint8_t* data_buff)
-{
+void I2cBus::WriteToMem(int addr, int mem_addr, int n_bytes, int* data_buff) {
   // Write data_buff to the slave specified by addr starting from the memory
   // address specified by mem_addr.
 
   SetSlaveAddr_(addr);
 
   // bool bSuccess = 0;
-  uint8_t w_buff[1 + n_bytes];
+  int w_buff[1 + n_bytes];
   w_buff[0] = mem_addr;
-  w_buff[1] = data;
+  // Shift and then fill the buffer
+  for (int i = 1; i <= n_bytes; i++) {
+    w_buff[i] = data_buff[i-1];
+  }
 
   // Write to define register
   if (write(file_, &w_buff, sizeof(w_buff)) == sizeof(w_buff)) {
@@ -46,14 +48,14 @@ void I2cBus::WriteToMem(uint8_t addr, uint8_t mem_addr, uint8_t n_bytes,
   }
 }
 
-uint8_t I2cBus::ReadFromMem(uint8_t addr, uint8_t mem_addr) {
+int I2cBus::ReadFromMem(int addr, int mem_addr) {
   // Read a byte from the slave specified by addr starting from the memory
   // address specified by mem_addr.
 
   SetSlaveAddr_(addr);
 
   // bool bSuccess = 0;
-  uint8_t data; // 'data' will store the register data
+  int data; // 'data' will store the register data
 
   // Write to defined register
   if (write(file_, &mem_addr, sizeof(mem_addr)) == sizeof(mem_addr)) {
@@ -66,8 +68,8 @@ uint8_t I2cBus::ReadFromMem(uint8_t addr, uint8_t mem_addr) {
   return data;  // Return data read from slave register
 }
 
-void I2cBus::ReadFromMemInto(uint8_t addr, uint8_t mem_addr, uint8_t n_bytes,
-                             uint8_t* data_buff)
+void I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
+                             int* data_buff)
 {
   // Read n_bytes into data_buff from the slave specified by addr starting from
   // the memory address specified by mem_addr.
