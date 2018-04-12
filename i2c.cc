@@ -21,7 +21,7 @@ int I2cBus::SetSlaveAddr_(int addr) {
   // Input output control setup to the slave device.
   if (ioctl(file_, I2C_SLAVE, addr) < 0) {
     success = 0;
-    printf("Failed to acquire bus access and/or talk to slave.\n");
+    perror("Failed to acquire bus access and/or talk to slave.\n");
     // ERROR HANDLING; you can check errno to see what went wrong
     exit(1);
   } else {
@@ -69,15 +69,18 @@ int I2cBus::ReadFromMem(int addr, int mem_addr) {
   int data; // 'data' will store the register data
 
   SetSlaveAddr_(addr);
+
   // Write to defined register
-  if (write(file_, &mem_addr, sizeof(mem_addr)) == sizeof(mem_addr)) {
+  if (write(file_, &mem_addr, 1) == 1) {
     // Read back value
-    if (read(file_, &data, sizeof(data)) == sizeof(data)) {
-      //bSuccess = 1;
+    if (read(file_, &data, sizeof(data)) != sizeof(data)) {
+      perror("I2C read failed.\n");
+      // ERROR HANDLING; you can check errno to see what went wrong
+      exit(1);
     }
   }
 
-  return data;  // Return data read from slave register
+  return data;
 }
 
 int I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
@@ -90,7 +93,7 @@ int I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
 
   SetSlaveAddr_(addr);
   // Write to defined register
-  if (write(file_, &mem_addr, sizeof(mem_addr)) == sizeof(mem_addr)) {
+  if (write(file_, &mem_addr, n_bytes + 1) == n_bytes + 1) {
     // read back value
     if (read(file_, data_buff, n_bytes) == n_bytes) {
       success = 1;
