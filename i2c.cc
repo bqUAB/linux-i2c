@@ -66,14 +66,14 @@ int I2cBus::ReadFromMem(int addr, int mem_addr) {
   // Read a byte from the slave specified by addr starting from the memory
   // address specified by mem_addr.
 
-  int data; // 'data' will store the register data
+  int data = 0; // 'data' will store the register data
 
   SetSlaveAddr_(addr);
 
   // Write to defined register
   if (write(file_, &mem_addr, 1) == 1) {
     // Read back value
-    if (read(file_, &data, sizeof(data)) != sizeof(data)) {
+    if (read(file_, &data, 1) != 1) {
       perror("I2C read failed.\n");
       // ERROR HANDLING; you can check errno to see what went wrong
       exit(1);
@@ -84,7 +84,7 @@ int I2cBus::ReadFromMem(int addr, int mem_addr) {
 }
 
 int I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
-                             int* data_buff)
+                             uint8_t* data_buff)
 {
   // Read n_bytes into data_buff from the slave specified by addr starting from
   // the memory address specified by mem_addr.
@@ -93,12 +93,13 @@ int I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
 
   SetSlaveAddr_(addr);
   // Write to defined register
-  if (write(file_, &mem_addr, n_bytes + 1) == n_bytes + 1) {
+  if (write(file_, &mem_addr, 1) == 1) {
     // read back value
     if (read(file_, data_buff, n_bytes) == n_bytes) {
       success = 1;
     } else {
       success = 0;
+      perror("I2C read failed.\n");
     }
   }
 
