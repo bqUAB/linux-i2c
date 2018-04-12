@@ -50,7 +50,7 @@ int I2cBus::WriteToMem(int addr, int mem_addr, int n_bytes,
   }
 
   // Write to define register
-  if (write(file_, &w_buff, sizeof(w_buff)) == sizeof(w_buff)) {
+  if (write(file_, &w_buff, sizeof(w_buff)) == int(sizeof(w_buff))) {
                                             // ^ int casting due to
                                             // uint comparison warning
     success = 1;
