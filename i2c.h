@@ -1,6 +1,6 @@
-/* Simplified I2C class based on:
-http://docs.micropython.org/en/latest/wipy/library/machine.I2C.html
-*/
+// Simplified I2C class based on:
+// http://docs.micropython.org/en/latest/wipy/library/machine.I2C.html
+
 #ifndef I2C_H_
 #define I2C_H_
 
@@ -17,7 +17,7 @@ class I2cBus {
     int file_ = 0;
     int list_[5];
 
-    void SetSlaveAddr_(int addr);
+    int SetSlaveAddr_(int addr);
 
   public:
     I2cBus(int bus_n);
@@ -29,9 +29,9 @@ class I2cBus {
     // address. The following methods are convenience functions to communicate
     // with such devices.
 
-    void WriteToMem(int addr, int mem_addr,  int n_bytes, int* data_buff);
+    int WriteToMem(int addr, int mem_addr, int n_bytes, int* data_buff);
     int ReadFromMem(int addr, int mem_addr);
-    void ReadFromMemInto(int addr, int mem_addr, int n_bytes, int* data_buff);
+    int ReadFromMemInto(int addr, int mem_addr, int n_bytes, int* data_buff);
 
 };
 

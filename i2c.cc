@@ -16,23 +16,33 @@ I2cBus::I2cBus(int bus_n) {
   }
 }
 
-void I2cBus::SetSlaveAddr_(int addr) {
+int I2cBus::SetSlaveAddr_(int addr) {
+  int success;
   // Input output control setup to the slave device.
   if (ioctl(file_, I2C_SLAVE, addr) < 0) {
-        printf("Failed to acquire bus access and/or talk to slave.\n");
-        // ERROR HANDLING; you can check errno to see what went wrong
-        exit(1);
+    success = 0;
+    printf("Failed to acquire bus access and/or talk to slave.\n");
+    // ERROR HANDLING; you can check errno to see what went wrong
+    exit(1);
+  } else {
+    success = 1;
   }
+
+  return success;
 }
 
-void I2cBus::WriteToMem(int addr, int mem_addr, int n_bytes, int* data_buff) {
+int I2cBus::WriteToMem(int addr, int mem_addr, int n_bytes,
+                       int* data_buff)
+{
   // Write data_buff to the slave specified by addr starting from the memory
   // address specified by mem_addr.
 
-  SetSlaveAddr_(addr);
+  int success;
+  int w_buff[1 + n_bytes];  // cannot create type information for type
+                            // 'int [(n_bytes + 1)]' because it involves types
+                            // of variable size
 
-  // bool bSuccess = 0;
-  int w_buff[1 + n_bytes];
+  SetSlaveAddr_(addr);
   w_buff[0] = mem_addr;
   // Shift and then fill the buffer
   for (int i = 1; i <= n_bytes; i++) {
@@ -41,22 +51,24 @@ void I2cBus::WriteToMem(int addr, int mem_addr, int n_bytes, int* data_buff) {
 
   // Write to define register
   if (write(file_, &w_buff, sizeof(w_buff)) == sizeof(w_buff)) {
-    // bSuccess = 1;
+                                            // ^ int casting due to
+                                            // uint comparison warning
+    success = 1;
   } else {
     // ERROR HANDLING: i2c transaction failed
-    // bSuccess = 0;
+    success = 0;
   }
+
+  return success;
 }
 
 int I2cBus::ReadFromMem(int addr, int mem_addr) {
   // Read a byte from the slave specified by addr starting from the memory
   // address specified by mem_addr.
 
-  SetSlaveAddr_(addr);
-
-  // bool bSuccess = 0;
   int data; // 'data' will store the register data
 
+  SetSlaveAddr_(addr);
   // Write to defined register
   if (write(file_, &mem_addr, sizeof(mem_addr)) == sizeof(mem_addr)) {
     // Read back value
@@ -68,20 +80,24 @@ int I2cBus::ReadFromMem(int addr, int mem_addr) {
   return data;  // Return data read from slave register
 }
 
-void I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
+int I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
                              int* data_buff)
 {
   // Read n_bytes into data_buff from the slave specified by addr starting from
   // the memory address specified by mem_addr.
 
-  SetSlaveAddr_(addr);
+  int success;
 
-  // bool bSuccess = 0;
+  SetSlaveAddr_(addr);
   // Write to defined register
   if (write(file_, &mem_addr, sizeof(mem_addr)) == sizeof(mem_addr)) {
     // read back value
     if (read(file_, data_buff, n_bytes) == n_bytes) {
-      //bSuccess = 1;
+      success = 1;
+    } else {
+      success = 0;
     }
   }
+
+  return success;
 }
