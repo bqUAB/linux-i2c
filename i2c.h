@@ -8,6 +8,7 @@
 #include <fcntl.h>  // Needed for open()
 #include <unistd.h>  // Needed for write, close
 #include <stdlib.h>  // Needed for exit()
+#include <cstdint>  // Needed for uint8_t
 #include <sys/ioctl.h>  // Needed for ioctl
 #include <linux/i2c-dev.h>  // Needed to use the I2C Linux driver (I2C_SLAVE)
 
@@ -31,7 +32,7 @@ class I2cBus {
 
     int WriteToMem(int addr, int mem_addr, int n_bytes, int* data_buff);
     int ReadFromMem(int addr, int mem_addr);
-    int ReadFromMemInto(int addr, int mem_addr, int n_bytes, int* data_buff);
+    int ReadFromMemInto(int addr, int mem_addr, int n_bytes, uint8_t* data_buff);
 
 };
 
