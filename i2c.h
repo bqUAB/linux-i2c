@@ -32,7 +32,8 @@ class I2cBus {
 
     int WriteToMem(int addr, int mem_addr, int n_bytes, int* data_buff);
     int ReadFromMem(int addr, int mem_addr);
-    int ReadFromMemInto(int addr, int mem_addr, int n_bytes, uint8_t* data_buff);
+    int ReadFromMemInto(int addr, int mem_addr, int n_bytes,
+                        uint8_t* data_buff);
 
 };
 
