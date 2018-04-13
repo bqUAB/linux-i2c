@@ -31,22 +31,38 @@ int I2cBus::SetSlaveAddr_(int addr) {
   return success;
 }
 
-int I2cBus::WriteToMem(int addr, int mem_addr, int n_bytes,
-                       int* data_buff)
-{
-  // Write data_buff to the slave specified by addr starting from the memory
+int I2cBus::ReadFromInto(int addr, uint8_t* buff) {
+  // Read into buf from the slave specified by addr. The number of bytes read
+  // will be the length of buff
+
+  int success;
+
+  SetSlaveAddr_(addr);
+  if (read(file_, buff, sizeof(buff)) == sizeof(buff)) {
+    success = 1;
+  } else {
+    success = 0;
+    perror("I2C read from slave into buffer failed.\n");
+    // ERROR HANDLING; you can check errno to see what went wrong
+  }
+
+  return success;
+}
+
+int I2cBus::WriteToMem(int addr, int mem_addr, int n_bytes, int* buff) {
+  // Write buff to the slave specified by addr starting from the memory
   // address specified by mem_addr.
 
   int success;
-  int w_buff[1 + n_bytes];  // cannot create type information for type
-                            // 'int [(n_bytes + 1)]' because it involves types
-                            // of variable size
+  uint8_t w_buff[1 + n_bytes];  // cannot create type information for type
+                                // 'int [(n_bytes + 1)]' because it involves
+                                // types of variable size
 
   SetSlaveAddr_(addr);
   w_buff[0] = mem_addr;
   // Shift and then fill the buffer
   for (int i = 1; i <= n_bytes; i++) {
-    w_buff[i] = data_buff[i-1];
+    w_buff[i] = buff[i-1];
   }
 
   // Write to define register
@@ -84,9 +100,9 @@ int I2cBus::ReadFromMem(int addr, int mem_addr) {
 }
 
 int I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
-                             uint8_t* data_buff)
+                             uint8_t* buff)
 {
-  // Read n_bytes into data_buff from the slave specified by addr starting from
+  // Read n_bytes into buff from the slave specified by addr starting from
   // the memory address specified by mem_addr.
 
   int success;
@@ -95,11 +111,11 @@ int I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
   // Write to defined register
   if (write(file_, &mem_addr, 1) == 1) {
     // read back value
-    if (read(file_, data_buff, n_bytes) == n_bytes) {
+    if (read(file_, buff, n_bytes) == n_bytes) {
       success = 1;
     } else {
       success = 0;
-      perror("I2C read failed.\n");
+      perror("I2C read from memory into buffer failed.\n");
     }
   }
 

@@ -23,6 +23,12 @@ class I2cBus {
   public:
     I2cBus(int bus_n);
 
+    // ----------------------- Standard bus operations -----------------------
+    // The following methods implement the standard I2C master read and write
+    // operations that target a given slave device.
+    int ReadFromInto(int addr, uint8_t* buff);
+    // int WriteTo(int addr, uint8_t* buff);
+
     // -------------------------- Memory Operations --------------------------
     // Some I2C devices act as a memory device (or set of registers) that can
     // be read from and written to. In this case there are two addresses
@@ -30,10 +36,9 @@ class I2cBus {
     // address. The following methods are convenience functions to communicate
     // with such devices.
 
-    int WriteToMem(int addr, int mem_addr, int n_bytes, int* data_buff);
+    int WriteToMem(int addr, int mem_addr, int n_bytes, int* buff);
     int ReadFromMem(int addr, int mem_addr);
-    int ReadFromMemInto(int addr, int mem_addr, int n_bytes,
-                        uint8_t* data_buff);
+    int ReadFromMemInto(int addr, int mem_addr, int n_bytes, uint8_t* buff);
 
 };
 
