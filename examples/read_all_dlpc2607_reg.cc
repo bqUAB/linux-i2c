@@ -13,7 +13,7 @@ int main() {
 
   for (int i = 0; i < 256; i++){
     // Read Command
-    i2c_1.WriteToMem(addr, 0x15, 1, &i);  // Part 1
+    i2c_1.WriteToMem(addr, 0x15, i);  // Part 1
     i2c_1.ReadFromInto(addr, value_out);  // Part 2
     for (int j = 0; j < 4; j++) {
       reg[i] |= value_out[j] << 8*(3 - j);
