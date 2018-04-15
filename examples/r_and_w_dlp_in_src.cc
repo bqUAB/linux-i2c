@@ -9,9 +9,9 @@
 int main() {
   I2cBus i2c_1(1);
 
-  int addr = 0x1B;  // DLPC2607 address
-  int reg = 0x0B;  // Input source selection
-  int value_in[4] = {0, 0, 0, 1};  // Internal test pattern
+  uint16_t addr = 0x1B;  // DLPC2607 address
+  uint8_t reg = 0x0B;  // Input source selection
+  uint8_t value_in[4] = {0, 0, 0, 1};  // Internal test pattern
   uint8_t value_out[4] = {0};
   int value = 0;  // 32-bit value
 
