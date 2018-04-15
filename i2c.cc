@@ -42,14 +42,37 @@ int I2cBus::ReadFromInto(int addr, uint8_t* buff) {
     success = 1;
   } else {
     success = 0;
+    // ERROR HANDLING: I2C transaction failed
     perror("I2C read from slave into buffer failed.\n");
-    // ERROR HANDLING; you can check errno to see what went wrong
   }
 
   return success;
 }
 
-int I2cBus::WriteToMem(int addr, int mem_addr, int n_bytes, int* buff) {
+int I2cBus::WriteToMem(int addr, int mem_addr, int data){
+  // Write data to the slave specified by addr starting from the memory
+  // address specified by mem_addr.
+
+  int success = 0;
+  uint8_t w_buf[2];
+  w_buf[0] = mem_addr;
+  w_buf[1] = data;
+
+  SetSlaveAddr_(addr);
+
+  // Write to defined register
+  if (write(file_, &w_buf, sizeof(w_buf)) == sizeof(w_buf)){
+    success = 1;
+  } else {
+    success = 0;
+    // ERROR HANDLING: I2C transaction failed
+    perror("I2C write to memory failed.\n");
+  }
+
+  return success;
+}
+
+int I2cBus::WriteToMemFrom(int addr, int mem_addr, int n_bytes, int* buff) {
   // Write buff to the slave specified by addr starting from the memory
   // address specified by mem_addr.
 
@@ -65,38 +88,41 @@ int I2cBus::WriteToMem(int addr, int mem_addr, int n_bytes, int* buff) {
     w_buff[i] = buff[i-1];
   }
 
-  // Write to define register
+  // Write to defined register
   if (write(file_, &w_buff, sizeof(w_buff)) == int(sizeof(w_buff))) {
                                             // ^ int casting due to
                                             // uint comparison warning
     success = 1;
   } else {
-    // ERROR HANDLING: i2c transaction failed
     success = 0;
+    // ERROR HANDLING: I2C transaction failed
+    perror("I2C write to memory from buffer failed.\n");
   }
 
   return success;
 }
 
-int I2cBus::ReadFromMem(int addr, int mem_addr) {
-  // Read a byte from the slave specified by addr starting from the memory
-  // address specified by mem_addr.
+int I2cBus::ReadFromMem(int addr, int mem_addr, int* data) {
+  // Read a byte from the slave specified by addr from the memory address
+  // specified by mem_addr.
 
-  int data = 0; // 'data' will store the register data
+  int success;
 
   SetSlaveAddr_(addr);
 
   // Write to defined register
-  if (write(file_, &mem_addr, 1) == 1) {
+  if (write(file_, &mem_addr, sizeof(uint8_t)) == sizeof(uint8_t)) {
     // Read back value
-    if (read(file_, &data, 1) != 1) {
-      perror("I2C read failed.\n");
-      // ERROR HANDLING; you can check errno to see what went wrong
-      exit(1);
+    if (read(file_, &data, sizeof(uint8_t)) == sizeof(uint8_t)) {
+      success = 1;
+    } else {
+      success = 0;
+      // ERROR HANDLING: I2C transaction failed
+      perror("I2C read from memory failed.\n");
     }
   }
 
-  return data;
+  return success;
 }
 
 int I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
@@ -109,12 +135,13 @@ int I2cBus::ReadFromMemInto(int addr, int mem_addr, int n_bytes,
 
   SetSlaveAddr_(addr);
   // Write to defined register
-  if (write(file_, &mem_addr, 1) == 1) {
+  if (write(file_, &mem_addr, sizeof(uint8_t)) == sizeof(uint8_t)) {
     // read back value
     if (read(file_, buff, n_bytes) == n_bytes) {
       success = 1;
     } else {
       success = 0;
+      // ERROR HANDLING: I2C transaction failed
       perror("I2C read from memory into buffer failed.\n");
     }
   }

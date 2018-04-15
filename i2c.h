@@ -36,8 +36,9 @@ class I2cBus {
     // address. The following methods are convenience functions to communicate
     // with such devices.
 
-    int WriteToMem(int addr, int mem_addr, int n_bytes, int* buff);
-    int ReadFromMem(int addr, int mem_addr);
+    int WriteToMem(int addr, int mem_addr, int data);
+    int WriteToMemFrom(int addr, int mem_addr, int n_bytes, int* buff);
+    int ReadFromMem(int addr, int mem_addr, int* data);
     int ReadFromMemInto(int addr, int mem_addr, int n_bytes, uint8_t* buff);
 
 };
