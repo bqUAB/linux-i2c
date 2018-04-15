@@ -18,15 +18,15 @@ class I2cBus {
     int file_ = 0;
     int list_[5];
 
-    int SetSlaveAddr_(int addr);
+    bool SetSlaveAddr_(uint16_t addr);
 
   public:
-    I2cBus(int bus_n);
+    I2cBus(uint bus_n);
 
     // ----------------------- Standard bus operations -----------------------
     // The following methods implement the standard I2C master read and write
     // operations that target a given slave device.
-    int ReadFromInto(int addr, uint8_t* buff);
+    bool ReadFromInto(uint16_t addr, uint8_t* buff);
     // int WriteTo(int addr, uint8_t* buff);
 
     // -------------------------- Memory Operations --------------------------
@@ -36,10 +36,12 @@ class I2cBus {
     // address. The following methods are convenience functions to communicate
     // with such devices.
 
-    int WriteToMem(int addr, int mem_addr, int data);
-    int WriteToMemFrom(int addr, int mem_addr, int n_bytes, int* buff);
-    int ReadFromMem(int addr, int mem_addr, int* data);
-    int ReadFromMemInto(int addr, int mem_addr, int n_bytes, uint8_t* buff);
+    bool WriteToMem(uint16_t addr, uint8_t mem_addr, uint8_t data);
+    bool WriteToMemFrom(uint16_t addr, uint8_t mem_addr, uint n_bytes,
+                       uint8_t* buff);
+    bool ReadFromMem(uint16_t addr, uint8_t mem_addr, uint8_t* data);
+    bool ReadFromMemInto(uint16_t addr, uint8_t mem_addr, uint n_bytes,
+                        uint8_t* buff);
 
 };
 
