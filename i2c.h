@@ -16,7 +16,6 @@
 class I2cBus {
   private:
     int file_ = 0;
-    int list_[5];
 
     bool SetSlaveAddr_(uint16_t addr);
 
@@ -38,10 +37,10 @@ class I2cBus {
 
     bool WriteToMem(uint16_t addr, uint8_t mem_addr, uint8_t data);
     bool WriteToMemFrom(uint16_t addr, uint8_t mem_addr, uint n_bytes,
-                       uint8_t* buff);
-    bool ReadFromMem(uint16_t addr, uint8_t mem_addr, uint8_t* data);
+                       uint8_t* buff_ptr);
+    bool ReadFromMem(uint16_t addr, uint8_t mem_addr, uint8_t* data_ptr);
     bool ReadFromMemInto(uint16_t addr, uint8_t mem_addr, uint n_bytes,
-                        uint8_t* buff);
+                        uint8_t* buff_ptr);
 
 };  // Class I2C
 

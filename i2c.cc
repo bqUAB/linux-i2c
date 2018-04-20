@@ -32,14 +32,14 @@ bool I2cBus::SetSlaveAddr_(uint16_t addr) {
   return success;
 }
 
-bool I2cBus::ReadFromInto(uint16_t addr, uint8_t* buff) {
-  // Read into buf from the slave specified by addr. The number of bytes read
+bool I2cBus::ReadFromInto(uint16_t addr, uint8_t* buff_ptr) {
+  // Read into buff from the slave specified by addr. The number of bytes read
   // will be the length of buff
 
   bool success = false;
 
   SetSlaveAddr_(addr);
-  if (read(file_, buff, sizeof(buff)) == sizeof(buff)) {
+  if (read(file_, buff_ptr, sizeof(buff_ptr)) == sizeof(buff_ptr)) {
     success = true;
   } else {
     success = false;
@@ -76,7 +76,7 @@ bool I2cBus::WriteToMem(uint16_t addr, uint8_t mem_addr, uint8_t data){
 }
 
 bool I2cBus::WriteToMemFrom(uint16_t addr, uint8_t mem_addr, uint n_bytes,
-                            uint8_t* buff) {
+                            uint8_t* buff_ptr) {
   // Write buff to the slave specified by addr starting from the memory
   // address specified by mem_addr.
 
@@ -89,7 +89,7 @@ bool I2cBus::WriteToMemFrom(uint16_t addr, uint8_t mem_addr, uint n_bytes,
   w_buff[0] = mem_addr;
   // Shift and then fill the buffer
   for (uint i = 1; i <= n_bytes; i++) {
-    w_buff[i] = buff[i-1];
+    w_buff[i] = buff_ptr[i-1];
   }
 
   // Write to defined register
@@ -107,7 +107,7 @@ bool I2cBus::WriteToMemFrom(uint16_t addr, uint8_t mem_addr, uint n_bytes,
   return success;
 }
 
-bool I2cBus::ReadFromMem(uint16_t addr, uint8_t mem_addr, uint8_t* data) {
+bool I2cBus::ReadFromMem(uint16_t addr, uint8_t mem_addr, uint8_t* data_ptr) {
   // Read a byte from the slave specified by addr from the memory address
   // specified by mem_addr.
 
@@ -118,7 +118,7 @@ bool I2cBus::ReadFromMem(uint16_t addr, uint8_t mem_addr, uint8_t* data) {
   // Write to defined register
   if (write(file_, &mem_addr, sizeof(mem_addr)) == sizeof(mem_addr)) {
     // Read back value
-    if (read(file_, &data, sizeof(data)) == sizeof(data)) {
+    if (read(file_, data_ptr, sizeof(uint8_t)) == sizeof(uint8_t)) {
       success = true;
     } else {
       success = false;
@@ -132,7 +132,7 @@ bool I2cBus::ReadFromMem(uint16_t addr, uint8_t mem_addr, uint8_t* data) {
 }
 
 bool I2cBus::ReadFromMemInto(uint16_t addr, uint8_t mem_addr, uint n_bytes,
-                             uint8_t* buff)
+                             uint8_t* buff_ptr)
 {
   // Read n_bytes into buff from the slave specified by addr starting from
   // the memory address specified by mem_addr.
@@ -143,7 +143,7 @@ bool I2cBus::ReadFromMemInto(uint16_t addr, uint8_t mem_addr, uint n_bytes,
   // Write to defined register
   if (write(file_, &mem_addr, sizeof(mem_addr)) == sizeof(mem_addr)) {
     // read back value
-    if (read(file_, buff, n_bytes) == int(n_bytes)) {
+    if (read(file_, buff_ptr, n_bytes) == int(n_bytes)) {
       success = true;
     } else {
       success = false;
