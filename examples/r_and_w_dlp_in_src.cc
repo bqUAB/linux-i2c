@@ -7,7 +7,7 @@
 
 
 int main() {
-  I2cBus i2c_1(1);
+  I2cBus i2c_bus(1);
 
   uint16_t addr = 0x1B;  // DLPC2607 address
   uint8_t reg = 0x0B;  // Input source selection
@@ -16,11 +16,11 @@ int main() {
   int value = 0;  // 32-bit value
 
   // Write Command
-  i2c_1.WriteToMemFrom(addr, reg, 4, value_in);
+  i2c_bus.WriteToMemFrom(addr, reg, 4, value_in);
 
   // Read Command
-  i2c_1.WriteToMem(addr, 0x15, reg);  // Part 1
-  i2c_1.ReadFromInto(addr, value_out);  // Part 2
+  i2c_bus.WriteToMem(addr, 0x15, reg);  // Part 1
+  i2c_bus.ReadFromInto(addr, value_out);  // Part 2
 
   for (int i = 0; i < int(sizeof(value_out)); i++) {
     value |= value_out[i] << 8*(3 - i);

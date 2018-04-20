@@ -6,7 +6,7 @@
 
 
 int main() {
-  I2cBus i2c_1(1);
+  I2cBus i2c_bus(1);
 
   uint16_t addr = 0x68;  // MPU9250 address
   uint8_t gyro_xout_h = 0x43;  // starting MPU register address from which to read
@@ -16,7 +16,7 @@ int main() {
   uint16_t gyro_z = 0;
 
   // Read 6 register values starting from gyro_xout_h
-  i2c_1.ReadFromMemInto(addr, gyro_xout_h, 6, gyro);
+  i2c_bus.ReadFromMemInto(addr, gyro_xout_h, 6, gyro);
   for (int i = 0; i < 6; i++) {
     printf("gyro[%d] = %#X\n", i, gyro[i]);
   }

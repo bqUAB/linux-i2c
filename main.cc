@@ -8,14 +8,14 @@
 
 
 int main() {
-  I2cBus i2c_0(0);
+  I2cBus i2c_bus(0);
 
   // Digital Accelerometer
   uint16_t address = 0x53;
   uint8_t devid = 0;
   uint8_t value = 0;
 
-  i2c_0.ReadFromMem(address, devid, &value);
+  i2c_bus.ReadFromMem(address, devid, &value);
   printf("The devid should be: 0xE5\n");
   printf("The HEX value read is: %#X\n", value);
 
