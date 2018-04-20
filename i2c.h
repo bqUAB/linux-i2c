@@ -43,6 +43,6 @@ class I2cBus {
     bool ReadFromMemInto(uint16_t addr, uint8_t mem_addr, uint n_bytes,
                         uint8_t* buff);
 
-};
+};  // Class I2C
 
 #endif // I2C_H_
